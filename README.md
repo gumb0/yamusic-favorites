@@ -1,0 +1,1 @@
+Google Chrome extension for saving artists/albums/tracks to bookmarks.

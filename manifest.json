@@ -1,0 +1,23 @@
+{
+  "manifest_version": 2,
+
+  "name": "Яндекс.Музыка Избранное",
+  "description": "Favorites for Yandex.Music",
+  "version": "0.1",
+
+  "background": { "scripts": ["common.js", "background.js"] },
+
+  "permissions" : [
+      "bookmarks",
+      "tabs"
+  ],
+  
+  "page_action": {
+    "default_icon": {
+      "19": "icons/bw19.png",
+      "38": "icons/bw38.png"
+    },
+    "default_title": "Яндекс.Музыка Избранное",
+    "default_popup": "popup.html"
+  }
+}
