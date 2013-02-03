@@ -33,14 +33,39 @@ function showPopupMessage(message)
     setTimeout(function() { window.close(); }, 3000);
 }
 
+function showSavedMessageWithDeleteButton(bookmarkTitle, bookmarkId)
+{
+    html = 'В Избранном: ' + bookmarkTitle;
+    html += '<div style="text-align: right"><button type="button" id="btnDelete">Удалить</button></div>';
+    document.getElementById("result").innerHTML = html;
+
+    document.getElementById("btnDelete").addEventListener('click', function()
+    {
+        chrome.bookmarks.remove(bookmarkId);
+        window.close();
+    });
+
+}
+
 function addBookmark(favoritesNode, subfolderName, title, url)
 {
-    getChildFolder(favoritesNode, subfolderName, function (subfolderNode) 
+    // don't add if it already exists (maybe outside of our favorites)
+    findBookmarkByUrl(url, function(bookmark)
     {
-        chrome.bookmarks.create({'parentId': subfolderNode.id, 'title': title, 'url': url}, function (newBookmark)
+        if (bookmark != null)
         {
-            showPopupMessage('Сохранено в Избранное: ' + title);
-        });
+            showPopupMessage(title + ' уже существует в закладках, не могу добавить в Избранное :-(');
+        }
+        else
+        {
+            getChildFolder(favoritesNode, subfolderName, function (subfolderNode) 
+            {
+                chrome.bookmarks.create({'parentId': subfolderNode.id, 'title': title, 'url': url}, function (newBookmark)
+                {
+                    showPopupMessage('Сохранено в Избранное: ' + title);
+                });
+            });
+        }
     });
 }
 
@@ -62,26 +87,44 @@ function addTrackBookmark(favoritesNode, title, url)
     addBookmark(favoritesNode, 'Треки', trackName, url);
 }
 
-function saveCurrentTabToBookmarks(favoritesNode)
+function saveTabToBookmarks(favoritesNode, tab)
+{
+    url = tab.url;
+    if (url.match(/^http:\/\/music.yandex.ru\/#!\/artist\/\d+$/i))
+        addArtistBookmark(favoritesNode, tab.title, url);
+    else if (url.match(/^http:\/\/music.yandex.ru\/#!\/album\/\d+$/i))
+        addAlbumBookmark(favoritesNode, tab.title, url);
+    else if (url.match(/^http:\/\/music.yandex.ru\/#!\/track\/\d+\/album\/\d+$/i))
+        addTrackBookmark(favoritesNode, tab.title, url);
+    else
+        showPopupMessage('Чтобы сохранить в Избранное, перейдите на страницу исполнителя, альбома или трека.');
+}
+
+function handleCurrentTab(favoritesNode)
 {
     getCurrentTab(function (tab)
     {
-        url = tab.url;
-        if (url.match(/^http:\/\/music.yandex.ru\/#!\/artist\/\d+$/i))
-            addArtistBookmark(favoritesNode, tab.title, url);
-        else if (url.match(/^http:\/\/music.yandex.ru\/#!\/album\/\d+$/i))
-            addAlbumBookmark(favoritesNode, tab.title, url);
-        else if (url.match(/^http:\/\/music.yandex.ru\/#!\/track\/\d+\/album\/\d+$/i))
-            addTrackBookmark(favoritesNode, tab.title, url);
-        else
-            showPopupMessage('Чтобы сохранить в Избранное, перейдите на страницу исполнителя, альбома или трека.');
-    } );
+        checkThatBookmarkExistsInFavorites(tab.url, function(bookmarkExists)
+        {
+            if (bookmarkExists)
+            {
+                findBookmarkByUrl(tab.url, function(bookmark)
+                {
+                    // assuming it is always found here
+                    showSavedMessageWithDeleteButton(bookmark.title, bookmark.id);
+                });
+            }
+            else
+            {
+                saveTabToBookmarks(favoritesNode, tab);
+            }
+        });
+    });
 }
-
 
 chrome.bookmarks.getTree( function (tree) 
 {
     otherBookmarksNode = tree[0].children[1];
 
-    getChildFolder(otherBookmarksNode, ROOT_FAVORITES_FOLDER, saveCurrentTabToBookmarks);
+    getChildFolder(otherBookmarksNode, ROOT_FAVORITES_FOLDER, handleCurrentTab);
 } );

@@ -1,6 +1,6 @@
 function updateIcon(tab)
 {
-    checkThatBookmarkExists(tab.url, function(bookmarkExists)
+    checkThatBookmarkExistsInFavorites(tab.url, function(bookmarkExists)
     {
         iconPath = bookmarkExists ? "icons/19.png" : "icons/bw19.png";
 

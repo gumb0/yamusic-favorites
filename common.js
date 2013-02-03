@@ -20,7 +20,7 @@ function checkGrandparent(node, callback)
     });
 }
 
-function checkThatBookmarkExists(url, callback)
+function checkThatBookmarkExistsInFavorites(url, callback)
 {
     chrome.bookmarks.search(url, function (nodes)
     {
@@ -38,3 +38,18 @@ function checkThatBookmarkExists(url, callback)
     });
 }
 
+function findBookmarkByUrl(url, callback)
+{
+    chrome.bookmarks.search(url, function (nodes)
+    {
+        for (i = 0; i < nodes.length; ++i) 
+        {
+            if (nodes[i].url == url)
+            {
+                callback(nodes[i]);
+                return;
+            }
+        }
+        callback(null);
+    });
+}
