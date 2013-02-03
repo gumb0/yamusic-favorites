@@ -27,44 +27,46 @@ function getChildFolder(parentNode, title, callback)
         } );
 }
 
-function showPopupMessage(message)
+function showMessage(message, tooltip)
 {
-    document.getElementById("result").innerHTML = message;
-    setTimeout(function() { window.close(); }, 3000);
+    document.getElementById("resultText").innerHTML = '<div title="' + tooltip + '">' + message + '</div>';
 }
 
-function showSavedMessageWithDeleteButton(bookmarkTitle, bookmarkId)
+function showMessageWithButton(message, buttonCaption, handler)
 {
-    html = 'В Избранном: ' + bookmarkTitle;
-    html += '<div style="text-align: right"><button type="button" id="btnDelete">Удалить</button></div>';
-    document.getElementById("result").innerHTML = html;
+    document.getElementById("resultText").innerHTML = message;
+    document.getElementById("resultButton").innerHTML = '<button type="button" id="btn">' + buttonCaption + '</button>';
 
-    document.getElementById("btnDelete").addEventListener('click', function()
-    {
-        chrome.bookmarks.remove(bookmarkId);
-        window.close();
-    });
-
+    document.getElementById("btn").addEventListener('click', handler);
 }
 
 function addBookmark(favoritesNode, subfolderName, title, url)
+{
+    getChildFolder(favoritesNode, subfolderName, function (subfolderNode) 
+    {
+        chrome.bookmarks.create({'parentId': subfolderNode.id, 'title': title, 'url': url});
+        window.close();
+    });
+}
+
+function removeBookmark(bookmarkId)
+{
+    chrome.bookmarks.remove(bookmarkId);
+    window.close();
+}
+
+function addBookmarkIfNotExists(favoritesNode, subfolderName, title, url)
 {
     // don't add if it already exists (maybe outside of our favorites)
     findBookmarkByUrl(url, function(bookmark)
     {
         if (bookmark != null)
         {
-            showPopupMessage(title + ' уже существует в закладках, не могу добавить в Избранное :-(');
+            showMessage(title, title + ' уже существует в закладках, не могу добавить в Избранное :-(');
         }
         else
         {
-            getChildFolder(favoritesNode, subfolderName, function (subfolderNode) 
-            {
-                chrome.bookmarks.create({'parentId': subfolderNode.id, 'title': title, 'url': url}, function (newBookmark)
-                {
-                    showPopupMessage('Сохранено в Избранное: ' + title);
-                });
-            });
+            showMessageWithButton(title, 'Добавить', function() { addBookmark(favoritesNode, subfolderName, title, url); });
         }
     });
 }
@@ -72,19 +74,19 @@ function addBookmark(favoritesNode, subfolderName, title, url)
 function addArtistBookmark(favoritesNode, title, url)
 {
     artistName = title.replace(/^(.+) на Яндекс.Музыке$/, '$1');
-    addBookmark(favoritesNode, 'Исполнители', artistName, url);
+    addBookmarkIfNotExists(favoritesNode, 'Исполнители', artistName, url);
 }
 
 function addAlbumBookmark(favoritesNode, title, url)
 {
     albumName = title.replace(/^Альбом «(.+)» исполнителя (.+) на Яндекс.Музыке$/, '$2 — $1');
-    addBookmark(favoritesNode, 'Альбомы', albumName, url);
+    addBookmarkIfNotExists(favoritesNode, 'Альбомы', albumName, url);
 }
 
 function addTrackBookmark(favoritesNode, title, url)
 {
     trackName = title.replace(/^«(.+)» из альбома «(.+)» исполнителя (.+) на Яндекс.Музыке$/, '$3 — $1');
-    addBookmark(favoritesNode, 'Треки', trackName, url);
+    addBookmarkIfNotExists(favoritesNode, 'Треки', trackName, url);
 }
 
 function saveTabToBookmarks(favoritesNode, tab)
@@ -97,7 +99,7 @@ function saveTabToBookmarks(favoritesNode, tab)
     else if (url.match(/^http:\/\/music.yandex.ru\/#!\/track\/\d+\/album\/\d+$/i))
         addTrackBookmark(favoritesNode, tab.title, url);
     else
-        showPopupMessage('Чтобы сохранить в Избранное, перейдите на страницу исполнителя, альбома или трека.');
+        showMessage('Чтобы добавить в Избранное, перейдите на страницу исполнителя, альбома или трека.', '');
 }
 
 function handleCurrentTab(favoritesNode)
@@ -111,7 +113,7 @@ function handleCurrentTab(favoritesNode)
                 findBookmarkByUrl(tab.url, function(bookmark)
                 {
                     // assuming it is always found here
-                    showSavedMessageWithDeleteButton(bookmark.title, bookmark.id);
+                    showMessageWithButton(bookmark.title, 'Удалить', function() { removeBookmark(bookmark.id); })
                 });
             }
             else
