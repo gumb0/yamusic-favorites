@@ -1,32 +1,3 @@
-function findNodeChildByName(node, name)
-{
-    res = null;
-    for (i = 0; i < node.children.length; ++i) 
-    {
-        child = node.children[i]
-        if (child.title == name)
-        {
-            res = child;
-            break;
-        }
-    }
-
-    return res;
-}
-
-function getChildFolder(parentNode, title, callback)
-{
-    childNode = findNodeChildByName(parentNode, title);
-
-    if (childNode)
-        callback(childNode);
-    else
-        chrome.bookmarks.create({'parentId': parentNode.id, 'title': title},  function (newFolder)
-        {
-            callback(newFolder);
-        } );
-}
-
 function showMessage(message, tooltip)
 {
     document.getElementById("resultText").innerHTML = '<div title="' + tooltip + '">' + message + '</div>';
@@ -74,19 +45,19 @@ function addBookmarkIfNotExists(favoritesNode, subfolderName, title, url)
 function addArtistBookmark(favoritesNode, title, url)
 {
     artistName = title.replace(/^(.+) на Яндекс.Музыке$/, '$1');
-    addBookmarkIfNotExists(favoritesNode, 'Исполнители', artistName, url);
+    addBookmarkIfNotExists(favoritesNode, FAVORITE_ARTISTS_FOLDER, artistName, url);
 }
 
 function addAlbumBookmark(favoritesNode, title, url)
 {
     albumName = title.replace(/^Альбом «(.+)» исполнителя (.+) на Яндекс.Музыке$/, '$2 — $1');
-    addBookmarkIfNotExists(favoritesNode, 'Альбомы', albumName, url);
+    addBookmarkIfNotExists(favoritesNode, FAVORITE_ALBUMS_FOLDER, albumName, url);
 }
 
 function addTrackBookmark(favoritesNode, title, url)
 {
     trackName = title.replace(/^«(.+)» из альбома «(.+)» исполнителя (.+) на Яндекс.Музыке$/, '$3 — $1');
-    addBookmarkIfNotExists(favoritesNode, 'Треки', trackName, url);
+    addBookmarkIfNotExists(favoritesNode, FAVORITE_TRACKS_FOLDER, trackName, url);
 }
 
 function saveTabToBookmarks(favoritesNode, tab)
@@ -124,9 +95,4 @@ function handleCurrentTab(favoritesNode)
     });
 }
 
-chrome.bookmarks.getTree( function (tree) 
-{
-    otherBookmarksNode = tree[0].children[1];
-
-    getChildFolder(otherBookmarksNode, ROOT_FAVORITES_FOLDER, handleCurrentTab);
-} );
+getFavoritesFolder(handleCurrentTab);
