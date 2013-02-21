@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge;chrome=1" />
+    <meta name="description" content="Liquid Slider : A JQuery Slider Plugin" />
+
+    <!-- 
+      Here is the style sheet for the Liquid Slider
+      You may want to "minify" this after making edits
+      http://www.refresh-sf.com/yui/ 
+    -->
+    <link rel="stylesheet" type="text/css" media="screen" href="./stylesheets/liquid-slider-1.1.css">
+
+    <style>
+        a.item-link:link, a.item-link:visited, a.item-link:active {text-decoration: none; color: #000; font: Arial,Helvetica,sans-serif;}
+        a.item-link:hover {text-decoration: underline; color: #f00;}
+    </style>  
+
+
+    <!-- Definitely use these for development -->
+    <script src="./js/jquery-1.8.2.min.js"></script>
+    <script src="./js/jquery-ui-1.8.20.custom.min.js"></script>
+
+    <!-- This of course is required. The full version (not .min) is also included in the js directory -->
+    <script src="./js/jquery.liquid-slider-1.1.min.js"></script>
+
+    <script src="../common.js"></script>
+    <script src="favorites_list.js"></script>
+  </head>
+  <body class='no-js' style="background-color:#FCF2EA">
+      <div class="liquid-slider" id="slider-id">
+        <div>
+          <h2 class="title">Исполнители</h2>
+          <div id="artists"></div>
+        </div>
+        <div>
+          <h2 class="title">Альбомы</h2>
+          <div id="albums"></div>
+        </div>          
+        <div>
+          <h2 class="title">Треки</h2>
+          <div id="tracks"></div>
+        </div>
+      </div>
+      <!-- Liquid Slider Ends Here -->
+  </body>
+</html>
