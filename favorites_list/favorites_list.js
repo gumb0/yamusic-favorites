@@ -12,7 +12,16 @@ function constructLinkHtml(idPrefix, index, url, title)
     return '<a id="'+ idPrefix + index + '" href="' + url + '" class="item-link">' + title + '</a>';
 }
 
-function fillPage(favoritesNode, subfolderName, destElementId)
+function initLiquidSlider()
+{
+    $('#slider-id').liquidSlider({
+        responsive:false,
+        slideEaseDuration: 400,
+        continuous: false
+    });
+}
+
+function fillPage(favoritesNode, subfolderName, destElementId, callback)
 {
     getChildFolder(favoritesNode, subfolderName, function (subfolderNode) 
     {
@@ -44,24 +53,20 @@ function fillPage(favoritesNode, subfolderName, destElementId)
                 });
             });
         }
+
+        if (callback)
+            callback();
     });
 }
 
 
-getFavoritesFolder(function (favoritesNode)
-{
-    fillPage(favoritesNode, FAVORITE_ARTISTS_FOLDER, 'artists');
-    fillPage(favoritesNode, FAVORITE_ALBUMS_FOLDER, 'albums');
-    fillPage(favoritesNode, FAVORITE_TRACKS_FOLDER, 'tracks');
-});
-
 $(function()
 {
-
-    $('#slider-id').liquidSlider({
-        responsive:false,
-        slideEaseDuration: 400,
-        continuous: false
+    getFavoritesFolder(function (favoritesNode)
+    {
+        fillPage(favoritesNode, FAVORITE_ARTISTS_FOLDER, 'artists');
+        fillPage(favoritesNode, FAVORITE_ALBUMS_FOLDER, 'albums');
+        fillPage(favoritesNode, FAVORITE_TRACKS_FOLDER, 'tracks', initLiquidSlider);
     });
 
 });
