@@ -1,0 +1,27 @@
+body.popup-body
+{
+    background-color:#FCF2EA;
+}
+
+div.popup-message
+{
+    width: 40ex; 
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+a.fav-link:link
+{
+    text-decoration: none; 
+    font: .8em Arial,Helvetica,sans-serif;
+}
+
+a.fav-link:visited, a.fav-link:active
+{
+    color: #1a3dc1;
+}
+
+a.fav-link:hover
+{
+    text-decoration: underline; 
+    color: #f00;
+}

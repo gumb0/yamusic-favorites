@@ -1,10 +1,12 @@
-function updateIcon(tab)
+function updateIconAndPopup(tab)
 {
     checkThatBookmarkExistsInFavorites(tab.url, function(bookmarkExists)
     {
         iconPath = bookmarkExists ? "icons/19.png" : "icons/bw19.png";
-
         chrome.pageAction.setIcon({path:iconPath, tabId:tab.id});
+
+        popupPath = bookmarkExists ? "popup-remove.html" : "popup.html";
+        chrome.pageAction.setPopup({popup:popupPath, tabId:tab.id});
     });
 }
 
@@ -13,14 +15,14 @@ function checkForValidUrl(tabId, changeInfo, tab)
 {
     if (tab.url.match(/^http:\/\/music.yandex.ru/i) != null)
     {
-        updateIcon(tab);
+        updateIconAndPopup(tab);
         chrome.pageAction.show(tabId);
     }
 }
 
 function onBookmarksChanged(id, bookmark)
 {
-    getCurrentTab(updateIcon);
+    getCurrentTab(updateIconAndPopup);
 }
 
 // Listen for any changes to the URL of any tab.

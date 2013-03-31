@@ -3,11 +3,9 @@ function showMessage(message, tooltip)
     document.getElementById("resultText").innerHTML = '<div title="' + tooltip + '">' + message + '</div>';
 }
 
-function showMessageWithButton(message, buttonCaption, handler)
+function showMessageWithButton(message, handler)
 {
     document.getElementById("resultText").innerHTML = message;
-    document.getElementById("resultButton").innerHTML = '<button type="button" id="btn">' + buttonCaption + '</button>';
-
     document.getElementById("btn").addEventListener('click', handler);
 }
 
@@ -37,7 +35,7 @@ function addBookmarkIfNotExists(favoritesNode, subfolderName, title, url)
         }
         else
         {
-            showMessageWithButton(title, 'Добавить', function() { addBookmark(favoritesNode, subfolderName, title, url); });
+            showMessageWithButton(title, function() { addBookmark(favoritesNode, subfolderName, title, url); });
         }
     });
 }
@@ -84,7 +82,7 @@ function handleCurrentTab(favoritesNode)
                 findBookmarkByUrl(tab.url, function(bookmark)
                 {
                     // assuming it is always found here
-                    showMessageWithButton(bookmark.title, 'Удалить', function() { removeBookmark(bookmark.id); })
+                    showMessageWithButton(bookmark.title, function() { removeBookmark(bookmark.id); })
                 });
             }
             else
