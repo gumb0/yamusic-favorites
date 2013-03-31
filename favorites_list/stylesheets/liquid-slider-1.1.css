@@ -150,6 +150,7 @@
   color: #333333;
   margin-right: 1px;
   padding: 3px 6px;  
+  font-weight: bold;
 }
 .liquid-slider-wrapper .liquid-nav a:hover {
   background: #ffffff;
