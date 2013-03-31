@@ -2,10 +2,10 @@ function updateIconAndPopup(tab)
 {
     checkThatBookmarkExistsInFavorites(tab.url, function(bookmarkExists)
     {
-        iconPath = bookmarkExists ? "icons/19.png" : "icons/bw19.png";
+        var iconPath = bookmarkExists ? "icons/19.png" : "icons/bw19.png";
         chrome.pageAction.setIcon({path:iconPath, tabId:tab.id});
 
-        popupPath = bookmarkExists ? "popup-remove.html" : "popup.html";
+        var popupPath = bookmarkExists ? "popup-remove.html" : "popup.html";
         chrome.pageAction.setPopup({popup:popupPath, tabId:tab.id});
     });
 }

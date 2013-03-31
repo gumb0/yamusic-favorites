@@ -42,25 +42,25 @@ function addBookmarkIfNotExists(favoritesNode, subfolderName, title, url)
 
 function addArtistBookmark(favoritesNode, title, url)
 {
-    artistName = title.replace(/^(.+) на Яндекс.Музыке$/, '$1');
+    var artistName = title.replace(/^(.+) на Яндекс.Музыке$/, '$1');
     addBookmarkIfNotExists(favoritesNode, FAVORITE_ARTISTS_FOLDER, artistName, url);
 }
 
 function addAlbumBookmark(favoritesNode, title, url)
 {
-    albumName = title.replace(/^Альбом «(.+)» исполнителя (.+) на Яндекс.Музыке$/, '$2 — $1');
+    var albumName = title.replace(/^Альбом «(.+)» исполнителя (.+) на Яндекс.Музыке$/, '$2 — $1');
     addBookmarkIfNotExists(favoritesNode, FAVORITE_ALBUMS_FOLDER, albumName, url);
 }
 
 function addTrackBookmark(favoritesNode, title, url)
 {
-    trackName = title.replace(/^«(.+)» из альбома «(.+)» исполнителя (.+) на Яндекс.Музыке$/, '$3 — $1');
+    var trackName = title.replace(/^«(.+)» из альбома «(.+)» исполнителя (.+) на Яндекс.Музыке$/, '$3 — $1');
     addBookmarkIfNotExists(favoritesNode, FAVORITE_TRACKS_FOLDER, trackName, url);
 }
 
 function saveTabToBookmarks(favoritesNode, tab)
 {
-    url = tab.url;
+    var url = tab.url;
     if (url.match(/^http:\/\/music.yandex.ru\/#!\/artist\/\d+$/i))
         addArtistBookmark(favoritesNode, tab.title, url);
     else if (url.match(/^http:\/\/music.yandex.ru\/#!\/album\/\d+$/i))

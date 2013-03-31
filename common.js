@@ -8,10 +8,10 @@ function findNodeChildByName(node, name)
     if (!node.children)
         return null;
 
-    res = null;
-    for (i = 0; i < node.children.length; ++i) 
+    var res = null;
+    for (var i = 0; i < node.children.length; ++i) 
     {
-        child = node.children[i]
+        var child = node.children[i]
         if (child.title == name)
         {
             res = child;
@@ -24,7 +24,7 @@ function findNodeChildByName(node, name)
 
 function getChildFolder(parentNode, title, callback)
 {
-    childNode = findNodeChildByName(parentNode, title);
+    var childNode = findNodeChildByName(parentNode, title);
 
     if (childNode)
         callback(childNode);
@@ -39,7 +39,7 @@ function getFavoritesFolder(callback)
 {
     chrome.bookmarks.getTree( function (tree) 
     {
-        otherBookmarksNode = tree[0].children[1];
+        var otherBookmarksNode = tree[0].children[1];
         getChildFolder(otherBookmarksNode, ROOT_FAVORITES_FOLDER, callback);
     });
 }
@@ -48,7 +48,7 @@ function getCurrentTab(callback)
 {
     chrome.tabs.query({active: true, windowId: chrome.windows.WINDOW_ID_CURRENT}, function (tabArray)
     {
-        tab = tabArray[0];
+        var tab = tabArray[0];
         callback(tab);
     });
 }
@@ -68,7 +68,7 @@ function checkThatBookmarkExistsInFavorites(url, callback)
 {
     chrome.bookmarks.search(url, function (nodes)
     {
-        for (i = 0; i < nodes.length; ++i) 
+        for (var i = 0; i < nodes.length; ++i) 
         {
             if (nodes[i].url == url)
             {
@@ -86,7 +86,7 @@ function findBookmarkByUrl(url, callback)
 {
     chrome.bookmarks.search(url, function (nodes)
     {
-        for (i = 0; i < nodes.length; ++i) 
+        for (var i = 0; i < nodes.length; ++i) 
         {
             if (nodes[i].url == url)
             {

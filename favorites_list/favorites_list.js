@@ -24,12 +24,12 @@ function initLiquidSlider()
 function fillPageFromBookmarkArray(bookmarkArray, destElementId)
 {
     // make copy of children array
-    bookmarks = bookmarkArray.slice(0);
+    var bookmarks = bookmarkArray.slice(0);
     bookmarks.sort(compareBookmarks);
 
-    linksHtml = '';
-    prevStartingLetter = '';
-    for (i = 0; i < bookmarks.length; ++i) 
+    var linksHtml = '';
+    var prevStartingLetter = '';
+    for (var i = 0; i < bookmarks.length; ++i) 
     {
         // additional line between first letter groups
         if (prevStartingLetter != bookmarks[i].title[0])
@@ -41,7 +41,7 @@ function fillPageFromBookmarkArray(bookmarkArray, destElementId)
     }
     document.getElementById(destElementId).innerHTML = linksHtml;
 
-    for (i = 0; i < bookmarks.length; ++i) 
+    for (var i = 0; i < bookmarks.length; ++i) 
     {
         document.getElementById(destElementId + i).addEventListener('click', function(event)
         {
