@@ -5,6 +5,9 @@ FAVORITE_TRACKS_FOLDER = 'Треки';
 
 function findNodeChildByName(node, name)
 {
+    if (!node.children)
+        return null;
+
     res = null;
     for (i = 0; i < node.children.length; ++i) 
     {

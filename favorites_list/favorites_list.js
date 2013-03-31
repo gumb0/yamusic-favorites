@@ -21,38 +21,46 @@ function initLiquidSlider()
     });
 }
 
+function fillPageFromBookmarkArray(bookmarkArray, destElementId)
+{
+    // make copy of children array
+    bookmarks = bookmarkArray.slice(0);
+    bookmarks.sort(compareBookmarks);
+
+    linksHtml = '';
+    prevStartingLetter = '';
+    for (i = 0; i < bookmarks.length; ++i) 
+    {
+        // additional line between first letter groups
+        if (prevStartingLetter != bookmarks[i].title[0])
+            linksHtml += '<br>';
+
+        linksHtml += constructLinkHtml(destElementId, i, bookmarks[i].url, bookmarks[i].title) + '<br>';
+
+        prevStartingLetter = bookmarks[i].title[0];
+    }
+    document.getElementById(destElementId).innerHTML = linksHtml;
+
+    for (i = 0; i < bookmarks.length; ++i) 
+    {
+        document.getElementById(destElementId + i).addEventListener('click', function(event)
+        {
+            getCurrentTab(function (tab)
+            {
+                chrome.tabs.update(tab.id, {'url': event.target.getAttribute('href')});
+            });
+        });
+    }
+}
+
 function fillPage(favoritesNode, subfolderName, destElementId, callback)
 {
     getChildFolder(favoritesNode, subfolderName, function (subfolderNode) 
     {
-        // make copy of children array
-        bookmarks = subfolderNode.children.slice(0);
-        bookmarks.sort(compareBookmarks);
-
-        linksHtml = '';
-        prevStartingLetter = '';
-        for (i = 0; i < bookmarks.length; ++i) 
-        {
-            // additional line between first letter groups
-            if (prevStartingLetter != bookmarks[i].title[0])
-                linksHtml += '<br>';
-
-            linksHtml += constructLinkHtml(destElementId, i, bookmarks[i].url, bookmarks[i].title) + '<br>';
-
-            prevStartingLetter = bookmarks[i].title[0];
-        }
-        document.getElementById(destElementId).innerHTML = linksHtml;
-
-        for (i = 0; i < bookmarks.length; ++i) 
-        {
-            document.getElementById(destElementId + i).addEventListener('click', function(event)
-            {
-                getCurrentTab(function (tab)
-                {
-                    chrome.tabs.update(tab.id, {'url': event.target.getAttribute('href')});
-                });
-            });
-        }
+        if (!subfolderNode.children || subfolderNode.children.length == 0)
+            document.getElementById(destElementId).innerHTML = "<br>Здесь пока ничего нет :(";
+        else
+            fillPageFromBookmarkArray(subfolderNode.children, destElementId);
 
         if (callback)
             callback();
