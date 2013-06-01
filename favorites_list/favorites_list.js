@@ -48,6 +48,7 @@ function fillPageFromBookmarkArray(bookmarkArray, destElementId)
             getCurrentTab(function (tab)
             {
                 chrome.tabs.update(tab.id, {'url': event.target.getAttribute('href')});
+                window.close();
             });
         });
     }
