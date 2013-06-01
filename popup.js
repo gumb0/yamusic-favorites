@@ -42,19 +42,22 @@ function addBookmarkIfNotExists(favoritesNode, subfolderName, title, url)
 
 function addArtistBookmark(favoritesNode, title, url)
 {
-    var artistName = title.replace(/^(.+) на Яндекс.Музыке$/, '$1');
+    // Ленинград — слушайте онлайн на Яндекс.Музыке
+    var artistName = title.replace(/^(.+) — слушайте онлайн на Яндекс.Музыке$/, '$1');
     addBookmarkIfNotExists(favoritesNode, FAVORITE_ARTISTS_FOLDER, artistName, url);
 }
 
 function addAlbumBookmark(favoritesNode, title, url)
 {
-    var albumName = title.replace(/^Альбом «(.+)» исполнителя (.+) на Яндекс.Музыке$/, '$2 — $1');
+    // Ленинград — «Хлеб» на Яндекс.Музыке
+    var albumName = title.replace(/^(.+) — «(.+)» на Яндекс.Музыке$/, '$1 — $2');
     addBookmarkIfNotExists(favoritesNode, FAVORITE_ALBUMS_FOLDER, albumName, url);
 }
 
 function addTrackBookmark(favoritesNode, title, url)
 {
-    var trackName = title.replace(/^«(.+)» из альбома «(.+)» исполнителя (.+) на Яндекс.Музыке$/, '$3 — $1');
+    // «Ленин-Град» исполнителя Ленинград из альбома «Хлеб» на Яндекс.Музыке
+    var trackName = title.replace(/^«(.+)» исполнителя (.+) из альбома «(.+)» на Яндекс.Музыке$/, '$2 — $1');
     addBookmarkIfNotExists(favoritesNode, FAVORITE_TRACKS_FOLDER, trackName, url);
 }
 
